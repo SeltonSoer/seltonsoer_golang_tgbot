@@ -22,4 +22,4 @@ jobs:
         go-version: 1.20.5
 
     - name: Build
-      run: go build -v ./...
+      run: go get github.com/Syfaro/telegram-bot-api && go get seltonsoer_golang_tgbot && go build
