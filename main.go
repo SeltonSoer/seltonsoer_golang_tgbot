@@ -1,7 +1,7 @@
 package main
 
 import (
-	"firstGoProject/utils"
+	"seltonsoer_golang_tgbot/utils"
 	"fmt"
 	"github.com/Syfaro/telegram-bot-api"
 	"log"
@@ -20,7 +20,7 @@ func main() {
 	updateConfig := tgbotapi.NewUpdate(0)
 	updateConfig.Timeout = 10
 
-	updates := bot.GetUpdatesChan(updateConfig)
+	updates, _ := bot.GetUpdatesChan(updateConfig)
 
 	for update := range updates {
 		if update.Message == nil {

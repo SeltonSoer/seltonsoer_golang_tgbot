@@ -6,12 +6,8 @@ import (
 )
 
 func GetRandomNumberFromRange(min, max int) int {
-	// Инициализируем генератор случайных чисел
 	rand.Seed(time.Now().UnixNano())
-
-	// Вызываем функцию генерации случайного числа
 	randomNumber := generateRandomNumber(min, max)
-
 	return randomNumber
 }
 

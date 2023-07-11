@@ -1,0 +1,59 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  BINARY_NAME: seltonsoer_golang_tgbot
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    name: Build Linux
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.20.5
+    - name: Build Linux Binary
+      run: |
+        go get github.com/Syfaro/telegram-bot-api
+        go get seltonsoer_golang_tgbot
+        go build ./
+
+    - uses: actions/upload-artifact@v2
+      name: Upload Linux Binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x86_64-linux
+        path: ./${{ env.BINARY_NAME }}
+
+  build-win:
+    runs-on: ubuntu-latest
+    name: Build Windows
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.20.5
+
+    - name: Build Windows Binary
+      run: |
+        go get github.com/Syfaro/telegram-bot-api
+        go get ${{ env.BINARY_NAME }}
+        go build -o ./${{ env.BINARY_NAME }}.exe
+      env:
+          GOARCH: amd64
+          GOOS: windows
+
+    - uses: actions/upload-artifact@v2
+      name: Upload Windows Binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x64.exe
+        path: ./${{ env.BINARY_NAME }}.exe
