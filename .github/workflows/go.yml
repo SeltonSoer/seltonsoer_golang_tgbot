@@ -57,3 +57,23 @@ jobs:
       with:
         name: ${{ env.BINARY_NAME }}_x64.exe
         path: ./${{ env.BINARY_NAME }}.exe
+        
+  push:
+    name: Push binary
+    needs: ["build-linux"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@master
+      id: download_binary
+      with:
+        name: ${{ env.BINARY_NAME }}
+        path: ${{ env.BINARY_NAME }}
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: 22
+        source: ${{ env.BINARY_NAME }}
+        target: /home/biba
