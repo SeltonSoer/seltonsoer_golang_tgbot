@@ -26,6 +26,7 @@ jobs:
         go get seltonsoer_golang_tgbot
         go build ./
         mv seltonsoer_golang_tgbot bot
+        ls -la
 
     - uses: actions/upload-artifact@v2
       name: Upload Linux Binary
@@ -50,6 +51,7 @@ jobs:
         go get ${{ env.BINARY_NAME }}
         go build -o ./${{ env.BINARY_NAME }}.exe
         mv ${{ env.BINARY_NAME }}.exe bot
+        ls -la
       env:
           GOARCH: amd64
           GOOS: windows
