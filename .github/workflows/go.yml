@@ -28,10 +28,10 @@ jobs:
         mv seltonsoer_golang_tgbot bot
 
     - uses: actions/upload-artifact@v2
-        name: Upload Linux Binary
-        with:
-          name: ${{ env.BINARY_NAME }}_x86_64-linux
-          path: ${{ env.BINARY_NAME }}
+      name: Upload Linux Binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x86_64-linux
+        path: ${{ env.BINARY_NAME }}
 
   build-win:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
           GOOS: windows
 
     - uses: actions/upload-artifact@v2
-        name: Upload Windows Binary
-        with:
-          name: ${{ env.BINARY_NAME }}_x64.exe
-          path: ${{ env.BINARY_NAME }}.exe
+      name: Upload Windows Binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x64.exe
+        path: ${{ env.BINARY_NAME }}.exe
