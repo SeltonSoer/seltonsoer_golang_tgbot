@@ -1,0 +1,31 @@
+name: Push binary
+on:
+  workflow_run:
+    workflows: ["Build"]
+    branches: [master]
+    types: 
+      - completed
+
+env:
+  BINARY_NAME: seltonsoer_golang_tgbot
+
+jobs:
+
+  push:
+    name: Push binary
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@master
+      id: download_binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x86_64-linux
+        path: ${{ env.BINARY_NAME }}
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: 22
+        source: ${{ env.BINARY_NAME }}
+        target: /home/biba
