@@ -1,13 +1,14 @@
 package main
 
 import (
-	"seltonsoer_golang_tgbot/utils"
 	"fmt"
 	"github.com/Syfaro/telegram-bot-api"
 	"log"
+	"seltonsoer_golang_tgbot/utils"
 )
 
 func main() {
+	// comment
 	bot, err := tgbotapi.NewBotAPI("6205520861:AAHQoorzrntpM2k1ExF3bHf8KFvAsLnQ8v0")
 
 	if err != nil {
