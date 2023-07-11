@@ -2,7 +2,7 @@ name: Push binary
 on:
   workflow_run:
     workflows: ["Build"]
-    branches: [master]
+    branches: ["master"]
     types: 
       - completed
 
