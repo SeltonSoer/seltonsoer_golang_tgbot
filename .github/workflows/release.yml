@@ -18,7 +18,7 @@ jobs:
     - uses: actions/download-artifact@master
       id: download_binary
       with:
-        name: ${{ env.BINARY_NAME }}_x86_64-linux
+        name: ${{ env.BINARY_NAME }}
         path: ${{ env.BINARY_NAME }}
     - name: copy file via ssh password
       uses: appleboy/scp-action@v0.1.4
