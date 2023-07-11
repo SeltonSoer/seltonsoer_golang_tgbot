@@ -25,7 +25,6 @@ jobs:
         go get github.com/Syfaro/telegram-bot-api
         go get seltonsoer_golang_tgbot
         go build -o ./${{ env.BINARY_NAME }}
-        chmod +x ${{ env.BINARY_NAME }}
 
     - uses: actions/upload-artifact@v2
       name: Upload Linux Binary
