@@ -4,19 +4,27 @@ import (
 	"fmt"
 	"github.com/Syfaro/telegram-bot-api"
 	"log"
+	"seltonsoer_golang_tgbot/dbConnection"
 	"seltonsoer_golang_tgbot/utils"
 )
 
+var devKey = "6329808132:AAH7wM9EIST0kKUU5Eo-DaHuvjZJfU9EHoU"
+var prodKey = "6205520861:AAHQoorzrntpM2k1ExF3bHf8KFvAsLnQ8v0"
+
 func main() {
-	// comment
-	bot, err := tgbotapi.NewBotAPI("6205520861:AAHQoorzrntpM2k1ExF3bHf8KFvAsLnQ8v0")
+	dbConnection.ConnectToDb()
+	connectToTg()
+}
+
+func connectToTg() {
+	bot, err := tgbotapi.NewBotAPI(devKey)
 
 	if err != nil {
 		log.Panic(err)
 	}
 
-	bot.Debug = true
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	//bot.Debug = true
+	//log.Printf("Authorized on account %s", bot.Self.UserName)
 
 	updateConfig := tgbotapi.NewUpdate(0)
 	updateConfig.Timeout = 10
@@ -34,7 +42,6 @@ func main() {
 			bot.Send(getBibaSize(update))
 		}
 	}
-
 }
 
 func getBibaSize(update tgbotapi.Update) tgbotapi.MessageConfig {
