@@ -5,19 +5,22 @@ import (
 	"github.com/Syfaro/telegram-bot-api"
 	"log"
 	"seltonsoer_golang_tgbot/dbConnection"
+	"seltonsoer_golang_tgbot/environments"
 	"seltonsoer_golang_tgbot/utils"
 )
 
-var devKey = "6329808132:AAH7wM9EIST0kKUU5Eo-DaHuvjZJfU9EHoU"
-var prodKey = "6205520861:AAHQoorzrntpM2k1ExF3bHf8KFvAsLnQ8v0"
-
 func main() {
 	dbConnection.CheckExistDb()
-	connectToTg()
+	tgkey, err := environments.GetEnvironments()
+	if err == nil {
+		connectToTg(tgkey)
+	} else {
+		log.Print(err)
+	}
 }
 
-func connectToTg() {
-	bot, err := tgbotapi.NewBotAPI(prodKey)
+func connectToTg(tgKey string) {
+	bot, err := tgbotapi.NewBotAPI(tgKey)
 
 	if err != nil {
 		log.Panic(err)
