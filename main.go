@@ -12,6 +12,7 @@ var devKey = "6329808132:AAH7wM9EIST0kKUU5Eo-DaHuvjZJfU9EHoU"
 var prodKey = "6205520861:AAHQoorzrntpM2k1ExF3bHf8KFvAsLnQ8v0"
 
 func main() {
+	dbConnection.CheckExistDb()
 	connectToTg()
 }
 
