@@ -4,47 +4,99 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
+	"os"
+	"seltonsoer_golang_tgbot/utils"
 )
 
-func ConnectToDb() {
+func connectToDb() (*sql.DB, error) {
 	// Открываем соединение с базой данных SQLite3
-	db, err := sql.Open("sqlite3", "G:/sqlite/dbs/db_local_sqlite.sqlite3")
+	db, err := sql.Open("sqlite3", "./dbSqlLite/db_local_sqlite.sqlite3")
 	if err != nil {
 		fmt.Println("Ошибка при открытии базы данных:", err)
-		return
+		return nil, err
 	}
-	defer db.Close()
 
-	//// Проверяем соединение с базой данных
+	// Проверяем соединение с базой данных
 	err = db.Ping()
 	if err != nil {
 		fmt.Println("Ошибка при проверке соединения с базой данных:", err)
-		return
+		return nil, err
 	}
+	return db, nil
+}
 
-	rows, err := db.Query("SELECT * FROM tg_users")
+func InsertConflictRecord(user utils.User) (interface{}, error) {
+	db, _ := connectToDb()
+	defer db.Close()
+
+	query := parserScriptsToString("./dbConnection/insertConflictRecord.sql")
+
+	_, err := db.Exec(query, user.BibaSize, user.UserName, user.IdTgUser)
 	if err != nil {
-		fmt.Println("Ошибка при выполнении запроса:", err)
-		return
+		return nil, err
 	}
-	//defer rows.Close()
+	return nil, nil
+}
 
-	for rows.Next() {
-		//var id_user int
-		//var biba_size int
-		//var user_name string
-		//err = rows.Scan(&biba_size, &user_name, &id_user)
-		columns, err := rows.Columns()
-		fmt.Print(columns)
-		if err != nil {
-			fmt.Println("Ошибка при сканировании строки:", err)
-			return
-		}
-		//fmt.Println("ID:", biba_size, "Name:", user_name)
+func InsertRecord(user utils.User) (interface{}, error) {
+	db, _ := connectToDb()
+	defer db.Close()
+
+	query := parserScriptsToString("./dbConnection/insertRecord.sql")
+
+	_, err := db.Exec(query, user.BibaSize, user.UserName, user.IdTgUser)
+	if err != nil {
+		return nil, err
 	}
-	//
-	//if err = rows.Err(); err != nil {
-	//	fmt.Println("Ошибка при обработке результатов запроса:", err)
-	//	return
-	//}
+	return nil, nil
+}
+
+func GetRecord(tgUser utils.User) (utils.User, error) {
+	var bibaSize int
+	var userName string
+	var idTgUserFromDb int
+
+	db, _ := connectToDb()
+	defer db.Close()
+
+	query := parserScriptsToString("./dbConnection/getRecord.sql")
+
+	row := db.QueryRow(query, tgUser.IdTgUser)
+
+	errSql := row.Scan(&bibaSize, &userName, &idTgUserFromDb)
+
+	if errSql == sql.ErrNoRows {
+		// here we get user from tg and insert it in table
+		user := utils.User{
+			BibaSize: tgUser.BibaSize,
+			UserName: tgUser.UserName,
+			IdTgUser: tgUser.IdTgUser,
+		}
+		_, err := InsertRecord(user)
+		if err == nil {
+			return user, nil
+		} else {
+			return utils.User{}, err
+		}
+	} else {
+		// here we return user from db
+		user := utils.User{
+			BibaSize: bibaSize,
+			UserName: userName,
+			IdTgUser: idTgUserFromDb,
+		}
+		return user, nil
+	}
+}
+
+func parserScriptsToString(path string) string {
+	script, err := os.ReadFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	query := string(script)
+
+	return query
 }
