@@ -11,7 +11,7 @@ import (
 
 func CheckExistDb() {
 	dbPath := "./dbSqlLite/db_local_sqlite.sqlite3"
-
+	// test
 	if !isDatabaseExists(dbPath) {
 		if err := createDatabase(dbPath); err != nil {
 			log.Fatal("Failed to create database:", err)
