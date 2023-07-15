@@ -1,0 +1,81 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  BINARY_NAME: seltonsoer_golang_tgbot
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    name: Build Linux
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.20.5
+    - name: Build Linux Binary
+      run: |
+        go mod download
+        go build -o ./${{ env.BINARY_NAME }}
+      env:
+        CGO_ENABLED: 1
+
+    - uses: actions/upload-artifact@v2
+      name: Upload Linux Binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x86_64-linux
+        path: ./${{ env.BINARY_NAME }}
+
+  build-win:
+    runs-on: ubuntu-latest
+    name: Build Windows
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.20.5
+
+    - name: Build Windows Binary
+      run: |
+        go mod download
+        go get ${{ env.BINARY_NAME }}
+        go build -o ./${{ env.BINARY_NAME }}.exe
+      env:
+          GOARCH: amd64
+          GOOS: windows
+          CGO_ENABLED: 0
+
+    - uses: actions/upload-artifact@v2
+      name: Upload Windows Binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x64.exe
+        path: ./${{ env.BINARY_NAME }}.exe
+        
+  push:
+    name: Push binary
+    needs: ["build-linux"]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@master
+      id: download_binary
+      with:
+        name: ${{ env.BINARY_NAME }}_x86_64-linux
+        path: ${{ env.BINARY_NAME }}
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: 22
+        source: ${{ env.BINARY_NAME }}
+        target: /home/biba
