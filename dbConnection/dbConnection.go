@@ -3,8 +3,8 @@ package dbConnection
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
+	_ "modernc.org/sqlite"
 	"os"
 	"seltonsoer_golang_tgbot/utils"
 )
@@ -29,7 +29,7 @@ func isDatabaseExists(dbPath string) bool {
 }
 
 func createDatabase(dbPath string) error {
-	db, err := sql.Open("sqlite3", dbPath)
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func createDatabase(dbPath string) error {
 }
 
 func connectToDb() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "./dbSqlLite/db_local_sqlite.sqlite3")
+	db, err := sql.Open("sqlite", "./dbSqlLite/db_local_sqlite.sqlite3")
 	if err != nil {
 		fmt.Println("Error opening database:", err)
 		return nil, err
