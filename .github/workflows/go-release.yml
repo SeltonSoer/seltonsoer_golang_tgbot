@@ -3,8 +3,6 @@ name: Build
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 env:
   BINARY_NAME: seltonsoer_golang_tgbot
