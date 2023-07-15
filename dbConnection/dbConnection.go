@@ -10,7 +10,7 @@ import (
 )
 
 func CheckExistDb() {
-	dbPath := "./dbSqlLite/db_local_sqlite.sqlite3"
+	dbPath := "./db_local_sqlite.sqlite3"
 
 	if !isDatabaseExists(dbPath) {
 		if err := createDatabase(dbPath); err != nil {
@@ -52,7 +52,7 @@ func createDatabase(dbPath string) error {
 }
 
 func connectToDb() (*sql.DB, error) {
-	db, err := sql.Open("sqlite", "./dbSqlLite/db_local_sqlite.sqlite3")
+	db, err := sql.Open("sqlite", "./db_local_sqlite.sqlite3")
 	if err != nil {
 		fmt.Println("Error opening database:", err)
 		return nil, err
