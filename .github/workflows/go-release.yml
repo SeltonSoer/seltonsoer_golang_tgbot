@@ -23,7 +23,7 @@ jobs:
         go mod download
         go build -o ./${{ env.BINARY_NAME }}
       env:
-        CGO_ENABLED: 1
+        CGO_ENABLED: 0
 
     - uses: actions/upload-artifact@v2
       name: Upload Linux Binary
